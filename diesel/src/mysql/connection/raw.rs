@@ -216,7 +216,7 @@ impl RawConnection {
         unsafe {
             match ssl_mode {
                 mysql_ssl_mode::SSL_MODE_DISABLED => {
-                    mysqlclient_sys::mysql_optionsv(
+                    mysqlclient_sys::mysql_options(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_ENFORCE,
                         &falsec as *const _ as *const core::ffi::c_void,
@@ -224,7 +224,7 @@ impl RawConnection {
                     ()
                 }
                 mysql_ssl_mode::SSL_MODE_PREFERRED | mysql_ssl_mode::SSL_MODE_REQUIRED => {
-                    mysqlclient_sys::mysql_optionsv(
+                    mysqlclient_sys::mysql_options(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_ENFORCE,
                         &truec as *const _ as *const core::ffi::c_void,
@@ -232,12 +232,12 @@ impl RawConnection {
                     ()
                 }
                 mysql_ssl_mode::SSL_MODE_VERIFY_CA | mysql_ssl_mode::SSL_MODE_VERIFY_IDENTITY => {
-                    mysqlclient_sys::mysql_optionsv(
+                    mysqlclient_sys::mysql_options(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_ENFORCE,
                         &truec as *const _ as *const core::ffi::c_void,
                     );
-                    mysqlclient_sys::mysql_optionsv(
+                    mysqlclient_sys::mysql_options(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_VERIFY_SERVER_CERT,
                         &truec as *const _ as *const core::ffi::c_void,
@@ -245,7 +245,7 @@ impl RawConnection {
                     ()
                 }
                 _ => (),
-            }
+            };
             mysqlclient_sys::mysql_options(
                 self.0.as_ptr(),
                 mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_MODE,
