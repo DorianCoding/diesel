@@ -2,7 +2,7 @@
 use core::ffi as libc;
 use core::ffi::CStr;
 use core::ptr::{self, NonNull};
-use mysqlclient_sys as ffi;
+use mysqlclient_sys::{self as ffi, mysql_ssl_mode};
 use std::sync::Once;
 
 use super::statement_cache::PrepareForCache;
@@ -244,6 +244,7 @@ impl RawConnection {
                     );
                     ()
                 }
+                _ => (),
             }
             mysqlclient_sys::mysql_options(
                 self.0.as_ptr(),
