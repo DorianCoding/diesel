@@ -215,7 +215,7 @@ impl RawConnection {
         let falsec = mysqlclient_sys::FALSE;
         unsafe {
             match ssl_mode {
-                /* mysql_ssl_mode::SSL_MODE_DISABLED => {
+                mysql_ssl_mode::SSL_MODE_DISABLED => {
                     mysqlclient_sys::mysql_optionsv(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_ENFORCE,
@@ -243,7 +243,7 @@ impl RawConnection {
                         &truec as *const _ as *const core::ffi::c_void,
                     );
                     ()
-                } */
+                }
                 _ => (),
             };
             mysqlclient_sys::mysql_optionsv(
