@@ -211,12 +211,12 @@ impl RawConnection {
         let v = ssl_mode as u32;
         let v_ptr: *const u32 = &v;
         let n = ptr::NonNull::new(v_ptr as *mut u32).expect("NonNull::new failed");
-        let truec = true;
-        let falsec = false;
+        let truec = mysqlclient_sys::TRUE;
+        let falsec = mysqlclient_sys::FALSE;
         unsafe {
             match ssl_mode {
                 mysql_ssl_mode::SSL_MODE_DISABLED => {
-                    mysqlclient_sys::mysql_options(
+                    mysqlclient_sys::mysql_optionsv(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_ENFORCE,
                         &falsec as *const _ as *const core::ffi::c_void,
@@ -224,7 +224,7 @@ impl RawConnection {
                     ()
                 }
                 mysql_ssl_mode::SSL_MODE_PREFERRED | mysql_ssl_mode::SSL_MODE_REQUIRED => {
-                    mysqlclient_sys::mysql_options(
+                    mysqlclient_sys::mysql_optionsv(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_ENFORCE,
                         &truec as *const _ as *const core::ffi::c_void,
@@ -232,12 +232,12 @@ impl RawConnection {
                     ()
                 }
                 mysql_ssl_mode::SSL_MODE_VERIFY_CA | mysql_ssl_mode::SSL_MODE_VERIFY_IDENTITY => {
-                    mysqlclient_sys::mysql_options(
+                    mysqlclient_sys::mysql_optionsv(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_ENFORCE,
                         &truec as *const _ as *const core::ffi::c_void,
                     );
-                    mysqlclient_sys::mysql_options(
+                    mysqlclient_sys::mysql_optionsv(
                         self.0.as_ptr(),
                         mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_VERIFY_SERVER_CERT,
                         &truec as *const _ as *const core::ffi::c_void,
@@ -246,11 +246,11 @@ impl RawConnection {
                 }
                 _ => (),
             };
-            mysqlclient_sys::mysql_options(
+            mysqlclient_sys::mysql_optionsv(
                 self.0.as_ptr(),
                 mysqlclient_sys::mysql_option::MYSQL_OPT_SSL_MODE,
                 n.as_ptr() as *const core::ffi::c_void,
-            )
+            );
         };
     }
 
